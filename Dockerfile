@@ -1,16 +1,11 @@
-# ---------- Build Stage ----------
-FROM node:22-alpine AS build
-WORKDIR /app
+FROM node:18
 
-COPY app/package*.json ./
+WORKDIR /app
+COPY . .
+
 RUN npm install
 
-COPY app/ .
-RUN npm run build
+EXPOSE 3000
+ENV HOST=0.0.0.0
 
-# ---------- Runtime Stage ----------
-FROM nginx:alpine
-COPY --from=build /app/dist /usr/share/nginx/html
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["npm", "start"]
